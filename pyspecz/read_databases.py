@@ -1,14 +1,26 @@
 import os
 import urllib
+from astropy.coordinates import SkyCoord
+from astropy import units as u
 
 import numpy as np
 
 from astropy.io import ascii
 from astropy.io import fits
 
+
+database_dtype = np.dtype([('id', np.int), ('ra', np.float), ('dec', np.float), ('flag', np.int),
+                           ('redshift', np.float), ('redshift_error', np.float), ('magnitude', np.float)])
+
+
 def download_file(url, directory):
+    file_name = url.split('/')[-1]
+    if not os.path.exists('%s/%s' % (directory, file_name)):
     print 'Downloading %s to %s' % (url, directory)
     urllib.urlretrieve(url, '%s/%s' % (directory, url.split('/')[-1]))
+    else:
+        print 'Skipping download of %s...' % file_name
+
 
 def read_survey_catalog(filename='../survey_list.csv'):
     '''
@@ -19,7 +31,6 @@ def read_survey_catalog(filename='../survey_list.csv'):
     Csv = ascii.Csv()
     return Csv.read(filename)
 
-s_data = read_survey_catalog()
 
 def read_vipers(data_dir='../data/VIPERS/'):
     '''
@@ -70,20 +81,49 @@ def read_vipers(data_dir='../data/VIPERS/'):
     return np.array()
 
 
+def read_2dfgrs(data_dir='../data/2dFGRS/'):
+    survey_name = '2dFGRS'
+    survey_columns = {'id': 'serial', 'ra': 'ra2000', 'dec': 'dec2000', 'flag': 'quality', 'redshift': 'z',
+                      'redshift_error': None, 'magnitude': 'BJG'}
+    survey_data = s_data[s_data['name'] == survey_name][0].data
 
-data_dir = '../data/SDSS'
+    download_file(survey_data['catalog_file'], data_dir)
+    file_name = survey_data['catalog_file'].split('/')[-1]
+
+    dt = [('serial', np.int)]
+    dt.extend((('ra2000_%i' % i, np.float) for i in range(3)))
+    dt.extend((('dec2000_%i' % i, np.float) for i in range(3)))
+    dt.extend(((key, np.float)) for key in ('BJG', 'z', 'quality'))
+    data = np.loadtxt('%s/%s' % (data_dir, file_name), dtype=dt, usecols=(0, 10, 11, 12, 13, 14, 15, 16, 23, 26))
+    flag_z = data[survey_columns['flag']] >= 3
+    data = data[flag_z]
+
+    out = np.empty(len(data), dtype=database_dtype)
+
+    for key in survey_columns.keys():
+        if survey_columns[key] is None:
+            out[key] = np.nan
+        elif key not in ('ra', 'dec'):
+            out[key] = data[survey_columns[key]]
+    for i in range(len(data)):
+        out['ra'][i], out['dec'][i] = \
+            [float(n) for n in SkyCoord('%02i %02i %3.2f  %02i %02i %3.2f' % (data['ra2000_0'][i], data['ra2000_1'][i],
+                                                                              data['ra2000_2'][i], data['dec2000_0'][i],
+                                                                              data['dec2000_1'][i], data['dec2000_2'][i]),
+                                        unit=(u.hourangle, u.deg)).to_string().split(' ')]
+
+    return out
 
 # def read_sdss():
 '''
 
-SDSS selection query:
 
 
-:return:
-'''
 
-survey_name = 'SDSS'
-survey_columns = {'id': 'BESTOBJID', 'ra': 'PLUG_RA', 'dec': 'PLUG_DEC', 'flag': 'ZWARNING', 'redshift': 'Z', 'redshift_error': 'Z_ERR'}
+if __name__ == '__main__':
+    s_data = read_survey_catalog()
+    # data_dir = '../data/'
+    kk = read_2dfgrs
 
 survey_data = s_data[s_data['name'] == survey_name][0].data
 urls = survey_data['catalog_file'].split(';')
