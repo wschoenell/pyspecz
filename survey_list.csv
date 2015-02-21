@@ -6,8 +6,8 @@ DEEP2,38000,http://deep.berkeley.edu/,2003SPIE.4834..161D,,
 GAMA,300000,http://www.eso.org/~jliske/gama/,2010MNRAS.404...86B,,
 LCRS,26000,http://qold.astro.utoronto.ca/~lin/lcrs.html,1996ApJ...470..172S,,
 MGC,10000,http://www.eso.org/~jliske/mgc/,2003MNRAS.344..307L,,
-6dFGS,125000,http://www-wfau.roe.ac.uk/6dFGS/,2009MNRAS.399..683J,,
-SDSS,1000000,http://www.sdss.org/,,http://data.sdss3.org/sas/dr10/sdss/spectro/redux/specObj-dr10.fits,http://www.sdss3.org/dr10/data_access/bulk.php
+6dFGS,125000,http://www-wfau.roe.ac.uk/6dFGS/,2009MNRAS.399..683J,http://www-wfau.roe.ac.uk/6dFGS/6dFGSzDR3.txt.gz,http://www-wfau.roe.ac.uk/6dFGS/download.html
+SDSS,1000000,http://www.sdss.org/,,http://data.sdss3.org/sas/dr10/sdss/spectro/redux/specObj-dr10.fits,http://www.sdss3.org/dr10/data_access/bulk.php;http://data.sdss3.org/datamodel/files/SPECTRO_REDUX/specObj.html
 SSRS2,5400,,1998AJ....116....1D,,
 2dFGRS,220000,http://www.mso.anu.edu.au/2dFGRS/,2001MNRAS.328.1039C,http://www.2dfgrs.net/Public/Release/SpecCat/best.observations.idz.gz,http://www.2dfgrs.net/Public/Release/SpecCat/speccat.html
 2SLAQ,13000,http://www.2slaq.info/,2006MNRAS.372..425C,,

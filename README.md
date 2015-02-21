@@ -25,6 +25,13 @@ VIPERS
 
 [documentation] (http://www.2dfgrs.net/Public/Release/SpecCat/speccat.html)
 
+6dFGS
+---
+
+    ???? lala
+
+[documentation] (http://www-wfau.roe.ac.uk/6dFGS/download.html)
+
 Links
 ===
 [List of Redshift surveys by Baldry] (http://www.astro.ljmu.ac.uk/~ikb/research/galaxy-redshift-surveys.html)
